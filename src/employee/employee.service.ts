@@ -1,25 +1,30 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import employees from 'src/data/employees';
-import { CreateEmployeeInput, Employee } from './employee.schema';
+import {
+  CreateEmployeeInput,
+  Employee,
+  EmployeeDocument,
+} from './employee.schema';
 
 @Injectable()
 export class EmployeeService {
   employees: Partial<Employee[]>;
 
-  constructor() {
+  constructor(
+    @InjectModel(Employee.name)
+    private employeeModel: Model<EmployeeDocument>,
+  ) {
     this.employees = employees;
   }
 
   async findMany() {
-    return this.employees;
+    return this.employeeModel.find();
   }
 
   async findById(id) {
-    const employees = this.employees.filter((employee) => employee.id == id);
-
-    if (employees) return employees[0];
-
-    return null;
+    return this.employeeModel.findById(id);
   }
 
   async createemployee(employee: CreateEmployeeInput) {

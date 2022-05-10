@@ -1,24 +1,26 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import orders from 'src/data/orders';
-import { CreateOrderInput, Order } from './order.schema';
+import { CreateOrderInput, Order, OrderDocument } from './order.schema';
 
 @Injectable()
 export class OrderService {
   orders: Partial<Order[]>;
-  constructor() {
+
+  constructor(
+    @InjectModel(Order.name)
+    private orderModel: Model<OrderDocument>,
+  ) {
     this.orders = orders;
   }
 
   async findMany() {
-    return this.orders;
+    return this.orderModel.find();
   }
 
   async findById(id) {
-    const orders = this.orders.filter((order) => order.id == id);
-
-    if (orders) return orders[0];
-
-    return null;
+    return this.orderModel.findById(id);
   }
 
   async createProduct(order: CreateOrderInput) {

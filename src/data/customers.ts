@@ -1,6 +1,6 @@
 export default [
   {
-    id: '43asdfasdf',
+    _id: '43asdfasdf',
     firstName: 'Pas',
     lastName: 'qualle',
     addresses: [],
