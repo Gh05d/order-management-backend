@@ -1,4 +1,5 @@
 import { Field, ObjectType, ID, InputType } from '@nestjs/graphql';
+import { Product } from 'src/product/product.schema';
 
 @ObjectType()
 export abstract class Person {
@@ -46,4 +47,13 @@ export class Address {
 
   @Field()
   misc: string;
+}
+
+@ObjectType()
+export class ProductOrder {
+  @Field(() => ID)
+  product: Product;
+
+  @Field()
+  quantity: number;
 }

@@ -3,7 +3,7 @@ export default [
     id: '43as3dfasdf',
     firstName: 'Hnas',
     lastName: 'qualle',
-    location: 'München',
+    email: 'rando@hi.de',
     employeeNumber: 1,
   },
 ];

@@ -1,15 +1,15 @@
 import { Field, ObjectType, ID, InputType } from '@nestjs/graphql';
-import { Address } from 'src/common/schemas';
+import { Address, ProductOrder } from 'src/common/schemas';
+import { Customer } from 'src/customer/customer.schema';
 import { Employee } from 'src/employee/employee.schema';
-import { ProductOrder } from 'src/product-order/product-order.schema';
 
 @ObjectType()
 export class Order {
   @Field(() => ID)
-  id: string;
+  id?: string;
 
   @Field()
-  state: 'OPEN' | 'IN_PROGRESS' | 'COMPLETE';
+  state?: 'OPEN' | 'IN_PROGRESS' | 'COMPLETE';
 
   @Field()
   totalPrice: number;
@@ -28,16 +28,13 @@ export class Order {
 
   @Field()
   employee: Employee;
+
+  @Field()
+  customer: Customer;
 }
 
 @InputType()
 export class CreateOrderInput {
-  @Field(() => ID)
-  id: string;
-
-  @Field()
-  state: 'OPEN' | 'IN_PROGRESS' | 'COMPLETE';
-
   @Field()
   totalPrice: number;
 
@@ -49,6 +46,9 @@ export class CreateOrderInput {
 
   @Field()
   employee: Employee;
+
+  @Field()
+  customer: Customer;
 }
 
 @InputType()

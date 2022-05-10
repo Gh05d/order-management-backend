@@ -4,7 +4,7 @@ import { CreatePersonInput, FindPersonInput, Person } from '../common/schemas';
 @ObjectType()
 export class Employee extends Person {
   @Field()
-  location: string;
+  email: string;
 
   @Field()
   employeeNumber: number;
@@ -13,7 +13,7 @@ export class Employee extends Person {
 @InputType()
 export class CreateEmployeeInput extends CreatePersonInput {
   @Field()
-  location: string;
+  email: string;
 
   @Field()
   employeeNumber: number;
@@ -24,8 +24,8 @@ export class FindEmployeeInput extends FindPersonInput {
   @Field(() => ID)
   id: string;
 
-  @Field(() => [ID])
-  location: [string];
+  @Field(() => String)
+  email: string;
 
   @Field(() => ID)
   employeeNumber: string;

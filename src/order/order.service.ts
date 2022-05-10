@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import orders from 'src/data/orders';
 import { CreateOrderInput, Order } from './order.schema';
 
 @Injectable()

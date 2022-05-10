@@ -5,10 +5,16 @@ import { Address, CreatePersonInput, Person } from '../common/schemas';
 export class Customer extends Person {
   @Field(() => [Address])
   addresses: Address[];
+
+  @Field()
+  firstOrder?: Date;
 }
 
 @InputType()
 export class CreateCustomerInput extends CreatePersonInput {
   @Field(() => [Address])
   addresses: Address[] | [];
+
+  @Field()
+  firstOrder?: Date;
 }
