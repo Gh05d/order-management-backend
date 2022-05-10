@@ -1,7 +1,7 @@
 {
   "name": "order-management-backend",
   "version": "0.0.1",
-  "description": "",
+  "description": "Backend Server for a simplified order management system using Apollo, Graphql, Nestjs and MongoDB",
   "author": "Pascal Clanget",
   "private": true,
   "license": "UNLICENSED",
