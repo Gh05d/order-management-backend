@@ -9,22 +9,22 @@ import { CreateOrderStatusHistoryInput } from './order-status-history.schema';
 
 @Injectable()
 export class OrderStatusHistoryService {
-  orderHistories: Partial<OrderStatusHistory[]>;
-
   constructor(
     @InjectModel(OrderStatusHistory.name)
-    private orderHistoryModel: Model<OrderStatusHistoryDocument>,
-  ) {
-    this.orderHistories = orderHistories;
+    private orderStatusHistoryModel: Model<OrderStatusHistoryDocument>,
+  ) {}
+
+  async findMany(): Promise<OrderStatusHistory[]> {
+    return this.orderStatusHistoryModel.find();
   }
 
-  async findMany() {
-    return this.orderHistoryModel.find();
+  async findById(id): Promise<OrderStatusHistory> {
+    return this.orderStatusHistoryModel.findById(id);
   }
 
-  async findById(id) {
-    return this.orderHistoryModel.findById(id);
+  async createStatus(
+    status: CreateOrderStatusHistoryInput,
+  ): Promise<OrderStatusHistory> {
+    return this.orderStatusHistoryModel.create(status);
   }
-
-  async createProduct(orderHistory: CreateOrderStatusHistoryInput) {}
 }

@@ -8,6 +8,7 @@ import { OrderModule } from './order/order.module';
 import { CustomerModule } from './customer/customer.module';
 import { EmployeeModule } from './employee/employee.module';
 import { OrderStatusHistoryModule } from './order-status-history/order-status-history.module';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -17,7 +18,10 @@ import { OrderStatusHistoryModule } from './order-status-history/order-status-hi
     ),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
+      autoSchemaFile: join(process.cwd(), 'schema.gql'),
+      buildSchemaOptions: {
+        dateScalarMode: 'timestamp',
+      },
     }),
     ProductModule,
     OrderModule,
@@ -25,5 +29,6 @@ import { OrderStatusHistoryModule } from './order-status-history/order-status-hi
     EmployeeModule,
     OrderStatusHistoryModule,
   ],
+  providers: [],
 })
 export class AppModule {}

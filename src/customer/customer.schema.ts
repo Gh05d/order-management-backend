@@ -8,7 +8,7 @@ export type CustomerDocument = Customer & mongoose.Document;
 @ObjectType()
 export class Customer extends Person {
   @Prop()
-  @Field(() => [Address])
+  @Field(() => [Address], { nullable: 'items' })
   addresses: Address[] | [];
 
   @Prop()

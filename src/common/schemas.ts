@@ -1,4 +1,4 @@
-import { Field, ObjectType, ID, InputType } from '@nestjs/graphql';
+import { Field, ObjectType, ID, InputType, Int } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Product } from 'src/product/product.schema';
@@ -68,6 +68,7 @@ export class Address {
 }
 
 export type ProductOrderDocument = ProductOrder & mongoose.Document;
+
 @ObjectType()
 export class ProductOrder {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Product.name })
@@ -75,7 +76,7 @@ export class ProductOrder {
   product: Product;
 
   @Prop({ required: true })
-  @Field()
+  @Field((type) => Int)
   quantity: number;
 }
 
@@ -85,11 +86,42 @@ ProductOrderSchema.index({ product: 1 });
 
 @InputType()
 export class CreateProductOrderInput {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Product.name })
   @Field(() => Product)
   product: Product;
 
-  @Prop({ required: true })
   @Field()
   quantity: number;
+}
+
+@ObjectType()
+export class EmployeeShort {
+  @Field(() => ID)
+  _id: string;
+
+  @Prop({ required: true })
+  @Field()
+  firstName: string;
+
+  @Prop({ required: true })
+  @Field()
+  lastName: string;
+}
+
+@ObjectType()
+export class CustomerShort {
+  @Prop({
+    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Customer',
+  })
+  @Field(() => ID)
+  _id: string;
+
+  @Prop({ required: true })
+  @Field()
+  firstName: string;
+
+  @Prop({ required: true })
+  @Field()
+  lastName: string;
 }

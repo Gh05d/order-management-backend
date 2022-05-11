@@ -1,0 +1,90 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Product {
+  _id: ID!
+  name: String!
+  price: Float!
+  image: String!
+  description: String!
+}
+
+type Address {
+  street: String!
+  zip: String!
+  city: String!
+  country: String!
+  misc: String!
+}
+
+type ProductOrder {
+  product: Product!
+  quantity: Int!
+}
+
+type EmployeeShort {
+  _id: ID!
+  firstName: String!
+  lastName: String!
+}
+
+type CustomerShort {
+  _id: ID!
+  firstName: String!
+  lastName: String!
+}
+
+type Order {
+  _id: ID!
+  state: String!
+  totalPrice: Float!
+  address: Address!
+  updated: Timestamp!
+  created: Timestamp!
+  items: [ProductOrder!]!
+  employee: EmployeeShort!
+  customer: CustomerShort!
+}
+
+"""
+`Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type Customer {
+  _id: ID!
+  firstName: String!
+  lastName: String!
+  updated: Timestamp!
+  created: Timestamp!
+  addresses: [Address]!
+  firstOrder: Timestamp!
+}
+
+type Employee {
+  _id: ID!
+  firstName: String!
+  lastName: String!
+  updated: Timestamp!
+  created: Timestamp!
+  email: String!
+  employeeNumber: Float!
+}
+
+type OrderStatusHistory {
+  _id: ID!
+  state: String!
+  created: Timestamp!
+  updatedBy: Employee!
+  order: Order!
+}
+
+type Query {
+  products: [Product!]!
+  order(id: String!): Order!
+  orders: [Order!]!
+  customers: [Customer!]!
+  employees: [Employee!]!
+  oshs: [OrderStatusHistory!]!
+}

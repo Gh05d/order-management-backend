@@ -1,7 +1,10 @@
-import { Field, ObjectType, ID, InputType } from '@nestjs/graphql';
-import { Address, ProductOrder } from 'src/common/schemas';
-import { Customer } from 'src/customer/customer.schema';
-import { Employee } from 'src/employee/employee.schema';
+import { Field, ObjectType, ID, InputType, Float } from '@nestjs/graphql';
+import {
+  Address,
+  CustomerShort,
+  EmployeeShort,
+  ProductOrder,
+} from 'src/common/schemas';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 
@@ -11,18 +14,18 @@ export type OrderDocument = Order & mongoose.Document;
 @ObjectType()
 export class Order {
   @Field(() => ID)
-  _id?: string;
+  _id: string;
 
   @Prop({ required: true })
   @Field()
   state?: 'OPEN' | 'IN_PROGRESS' | 'COMPLETE';
 
   @Prop({ required: true })
-  @Field()
+  @Field((type) => Float)
   totalPrice: number;
 
   @Prop({ required: true })
-  @Field()
+  @Field((type) => Address)
   address: Address;
 
   @Prop()
@@ -33,37 +36,41 @@ export class Order {
   @Field()
   created: Date;
 
-  @Prop({ required: true })
-  @Field()
-  items: [ProductOrder];
+  @Prop()
+  @Field((type) => [ProductOrder])
+  items: ProductOrder[] | [];
 
   @Prop({ required: true })
-  @Field()
-  employee: Employee;
+  @Field((type) => EmployeeShort)
+  employee: EmployeeShort;
 
   @Prop({ required: true })
-  @Field()
-  customer: Customer;
+  @Field((type) => CustomerShort)
+  customer: CustomerShort;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
 
 @InputType()
 export class CreateOrderInput {
-  @Field()
+  @Prop({ required: true })
+  @Field(() => Float)
   totalPrice: number;
 
-  @Field()
+  @Field((type) => Address)
   address: Address;
 
-  @Field()
-  items: [ProductOrder];
+  @Prop()
+  @Field((type) => [ProductOrder])
+  items: ProductOrder[] | [];
 
-  @Field()
-  employee: Employee;
+  @Prop({ required: true })
+  @Field((type) => EmployeeShort)
+  employee: EmployeeShort;
 
-  @Field()
-  customer: Customer;
+  @Prop({ required: true })
+  @Field((type) => CustomerShort)
+  customer: CustomerShort;
 }
 
 @InputType()

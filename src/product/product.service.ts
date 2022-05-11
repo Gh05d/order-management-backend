@@ -1,34 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import products from '../data/products';
 import { Product, CreateProductInput, ProductDocument } from './product.schema';
 
 @Injectable()
 export class ProductService {
-  products: Partial<Product[]>;
-
   constructor(
     @InjectModel(Product.name)
     private productModel: Model<ProductDocument>,
-  ) {
-    this.products = products;
+  ) {}
+
+  async findMany(): Promise<Product[]> {
+    return this.productModel.find().lean();
   }
 
-  async findMany() {
-    return this.products;
+  async findById(id): Promise<Product> {
+    return this.productModel.findById(id).lean();
   }
 
-  async findByEan(ean) {
-    return this.productModel.find({ ean }).lean();
-  }
-
-  async findByName(name) {
+  async findByName(name): Promise<Product> {
     return this.productModel.find({ name }).lean();
   }
 
-  async createProduct(product: CreateProductInput) {
-    this.products = [product, ...this.products];
-    return product;
+  async createProduct(product: CreateProductInput): Promise<Product> {
+    return this.productModel.create(product);
   }
 }

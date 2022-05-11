@@ -9,22 +9,20 @@ import {
 
 @Injectable()
 export class EmployeeService {
-  employees: Partial<Employee[]>;
-
   constructor(
     @InjectModel(Employee.name)
     private employeeModel: Model<EmployeeDocument>,
-  ) {
-    this.employees = employees;
-  }
+  ) {}
 
-  async findMany() {
+  async findMany(): Promise<Employee[]> {
     return this.employeeModel.find();
   }
 
-  async findById(id) {
+  async findById(id): Promise<Employee> {
     return this.employeeModel.findById(id);
   }
 
-  async createemployee(employee: CreateEmployeeInput) {}
+  async createemployee(employee: CreateEmployeeInput): Promise<Employee> {
+    return this.employeeModel.create(employee);
+  }
 }

@@ -9,22 +9,20 @@ import {
 
 @Injectable()
 export class CustomerService {
-  customers: Partial<Customer[]>;
-
   constructor(
     @InjectModel(Customer.name)
     private customerModel: Model<CustomerDocument>,
-  ) {
-    this.customers = customers;
-  }
+  ) {}
 
-  async findMany() {
+  async findMany(): Promise<Customer[]> {
     return this.customerModel.find();
   }
 
-  async findById(id) {
+  async findById(id): Promise<Customer> {
     return this.customerModel.findById(id);
   }
 
-  async createCustomer(customer: CreateCustomerInput) {}
+  async createCustomer(customer: CreateCustomerInput): Promise<Customer> {
+    return this.customerModel.create(customer);
+  }
 }

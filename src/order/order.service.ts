@@ -5,22 +5,25 @@ import { CreateOrderInput, Order, OrderDocument } from './order.schema';
 
 @Injectable()
 export class OrderService {
-  orders: Partial<Order[]>;
-
   constructor(
     @InjectModel(Order.name)
     private orderModel: Model<OrderDocument>,
-  ) {
-    this.orders = orders;
+  ) {}
+
+  async findMany(limit = 50): Promise<Order[]> {
+    const order = await this.orderModel.find();
+    console.log(
+      'FIRE ~ file: order.service.ts ~ line 15 ~ OrderService ~ findMany ~ order',
+      this.orderModel.find(),
+    );
+    return order;
   }
 
-  async findMany() {
-    return this.orderModel.find();
-  }
-
-  async findById(id) {
+  async findById(id): Promise<Order> {
     return this.orderModel.findById(id);
   }
 
-  async createProduct(order: CreateOrderInput) {}
+  async createOrder(order: CreateOrderInput): Promise<Order> {
+    return this.orderModel.create(order);
+  }
 }

@@ -9,14 +9,10 @@ import {
 
 @Injectable()
 export class ProductOrderService {
-  productOrders: Partial<ProductOrder[]>;
-
   constructor(
     @InjectModel(ProductOrder.name)
     private productOrdersModel: Model<ProductOrderDocument>,
-  ) {
-    this.productOrders = productOrders;
-  }
+  ) {}
 
   async findMany() {
     return this.productOrdersModel.find();
@@ -26,5 +22,7 @@ export class ProductOrderService {
     return this.productOrdersModel.findById(id);
   }
 
-  async createProduct(productOrder: CreateProductOrderInput) {}
+  async createProduct(productOrder: CreateProductOrderInput) {
+    return this.productOrdersModel.create(productOrder);
+  }
 }
