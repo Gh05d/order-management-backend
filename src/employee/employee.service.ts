@@ -14,8 +14,8 @@ export class EmployeeService {
     private employeeModel: Model<EmployeeDocument>,
   ) {}
 
-  async findMany(): Promise<Employee[]> {
-    return this.employeeModel.find();
+  async fetchMany(limit): Promise<Employee[]> {
+    return this.employeeModel.find().limit(limit).lean();
   }
 
   async findById(id): Promise<Employee> {

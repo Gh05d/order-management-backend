@@ -14,7 +14,7 @@ export class OrderStatusHistoryService {
     private orderStatusHistoryModel: Model<OrderStatusHistoryDocument>,
   ) {}
 
-  async findMany(): Promise<OrderStatusHistory[]> {
+  async fetchMany(): Promise<OrderStatusHistory[]> {
     return this.orderStatusHistoryModel.find();
   }
 

@@ -6,6 +6,7 @@ import { Product } from 'src/product/product.schema';
 @Schema()
 @ObjectType()
 export abstract class Person {
+  @Prop({ required: true })
   @Field(() => ID)
   _id: string;
 
@@ -52,7 +53,7 @@ export class Address {
 
   @Prop({ required: true })
   @Field()
-  zip?: string;
+  zip: string;
 
   @Prop({ required: true })
   @Field()
@@ -71,12 +72,16 @@ export type ProductOrderDocument = ProductOrder & mongoose.Document;
 
 @ObjectType()
 export class ProductOrder {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Product.name })
+  @Prop({
+    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product',
+  })
   @Field(() => Product)
-  product: Product;
+  product: string;
 
   @Prop({ required: true })
-  @Field((type) => Int)
+  @Field(() => Int)
   quantity: number;
 }
 
@@ -91,37 +96,4 @@ export class CreateProductOrderInput {
 
   @Field()
   quantity: number;
-}
-
-@ObjectType()
-export class EmployeeShort {
-  @Field(() => ID)
-  _id: string;
-
-  @Prop({ required: true })
-  @Field()
-  firstName: string;
-
-  @Prop({ required: true })
-  @Field()
-  lastName: string;
-}
-
-@ObjectType()
-export class CustomerShort {
-  @Prop({
-    required: true,
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Customer',
-  })
-  @Field(() => ID)
-  _id: string;
-
-  @Prop({ required: true })
-  @Field()
-  firstName: string;
-
-  @Prop({ required: true })
-  @Field()
-  lastName: string;
 }

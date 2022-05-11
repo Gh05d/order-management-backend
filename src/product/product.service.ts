@@ -10,12 +10,16 @@ export class ProductService {
     private productModel: Model<ProductDocument>,
   ) {}
 
-  async findMany(): Promise<Product[]> {
-    return this.productModel.find().lean();
+  async fetchMany(limit = 50): Promise<Product[]> {
+    return this.productModel.find().limit(limit).lean();
+  }
+
+  async fetchList(ids: string[]): Promise<Product[]> {
+    return this.productModel.find().where('_id').in(ids);
   }
 
   async findById(id): Promise<Product> {
-    return this.productModel.findById(id).lean();
+    return this.productModel.findById(id);
   }
 
   async findByName(name): Promise<Product> {

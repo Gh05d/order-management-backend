@@ -14,8 +14,8 @@ export class CustomerService {
     private customerModel: Model<CustomerDocument>,
   ) {}
 
-  async findMany(): Promise<Customer[]> {
-    return this.customerModel.find();
+  async fetchMany(limit = 10): Promise<Customer[]> {
+    return this.customerModel.find().limit(limit).lean();
   }
 
   async findById(id): Promise<Customer> {

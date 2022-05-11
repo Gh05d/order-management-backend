@@ -8,6 +8,6 @@ export class OrderStatusHistoryResolver {
 
   @Query(() => [OrderStatusHistory])
   async oshs() {
-    return this.orderStatusHistoryService.findMany();
+    return this.orderStatusHistoryService.fetchMany();
   }
 }

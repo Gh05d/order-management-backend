@@ -10,6 +10,7 @@ export type OrderStatusHistoryDocument = OrderStatusHistory & mongoose.Document;
 @Schema()
 @ObjectType()
 export class OrderStatusHistory {
+  @Prop({ required: true })
   @Field(() => ID)
   _id?: string;
 

@@ -1,4 +1,4 @@
-import { Resolver, Query } from '@nestjs/graphql';
+import { Args, Int, Query, Resolver } from '@nestjs/graphql';
 import { Customer } from './customer.schema';
 import { CustomerService } from './customer.service';
 
@@ -6,8 +6,13 @@ import { CustomerService } from './customer.service';
 export class CustomerResolver {
   constructor(private customerService: CustomerService) {}
 
-  @Query(() => [Customer])
-  async customers() {
-    return this.customerService.findMany();
+  @Query(() => [Customer], { name: 'customers' })
+  async getCustomers() {
+    return this.customerService.fetchMany();
+  }
+
+  @Query(() => Customer, { name: 'customer' })
+  async getCustomer(@Args('id', { type: () => Int }) id: number) {
+    return this.customerService.findById(id);
   }
 }

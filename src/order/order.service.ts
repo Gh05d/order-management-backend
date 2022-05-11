@@ -10,13 +10,8 @@ export class OrderService {
     private orderModel: Model<OrderDocument>,
   ) {}
 
-  async findMany(limit = 50): Promise<Order[]> {
-    const order = await this.orderModel.find();
-    console.log(
-      'FIRE ~ file: order.service.ts ~ line 15 ~ OrderService ~ findMany ~ order',
-      this.orderModel.find(),
-    );
-    return order;
+  async fetchMany(limit = 50): Promise<Order[]> {
+    return this.orderModel.find().limit(limit).lean();
   }
 
   async findById(id): Promise<Order> {

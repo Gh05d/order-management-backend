@@ -14,7 +14,7 @@ export class ProductOrderService {
     private productOrdersModel: Model<ProductOrderDocument>,
   ) {}
 
-  async findMany() {
+  async fetchMany() {
     return this.productOrdersModel.find();
   }
 

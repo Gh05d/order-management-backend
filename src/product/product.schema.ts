@@ -7,6 +7,7 @@ export type ProductDocument = Product & mongoose.Document;
 @Schema()
 @ObjectType()
 export class Product {
+  @Prop({ required: true })
   @Field(() => ID)
   _id: string;
 
@@ -44,8 +45,8 @@ export class CreateProductInput {
   description?: string;
 }
 
-@InputType()
-export class FindProductInput {
-  @Field(() => ID)
-  id: string;
-}
+// @InputType()
+// export class FindProductInput {
+//   @Field(() => ID)
+//   id: string;
+// }
