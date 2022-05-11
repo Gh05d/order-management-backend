@@ -29,9 +29,9 @@ export class Order {
   @Field()
   updated?: Date;
 
-  @Prop()
+  @Prop({ required: true })
   @Field()
-  created?: Date;
+  created: Date;
 
   @Prop({ required: true })
   @Field()
@@ -69,5 +69,5 @@ export class CreateOrderInput {
 @InputType()
 export class FindOrderInput {
   @Field(() => ID)
-  id: string;
+  _id: string;
 }

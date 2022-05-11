@@ -16,7 +16,7 @@ export class Customer extends Person {
   firstOrder?: Date;
 }
 
-export const ProductSchema = SchemaFactory.createForClass(Customer);
+export const CustomerSchema = SchemaFactory.createForClass(Customer);
 
 @InputType()
 export class CreateCustomerInput extends CreatePersonInput {

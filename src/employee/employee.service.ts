@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import employees from 'src/data/employees';
 import {
   CreateEmployeeInput,
   Employee,
@@ -27,8 +26,5 @@ export class EmployeeService {
     return this.employeeModel.findById(id);
   }
 
-  async createemployee(employee: CreateEmployeeInput) {
-    this.employees = [employee, ...this.employees];
-    return employee;
-  }
+  async createemployee(employee: CreateEmployeeInput) {}
 }

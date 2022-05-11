@@ -1,12 +1,11 @@
 import Faker from '@faker-js/faker';
-
-const { address, name, finance, commerce, image, internet } = Faker;
+import fs from 'fs';
+const { address, name, database, finance, commerce, image, internet } = Faker;
 
 /***********************************************
  * Helper functions
  ***********************************************/
 
-const generateID = () => finance.bitcoinAddress();
 const coinflip = (cb) => (Math.floor(Math.random() * 10 + 1) > 5 ? cb() : null);
 
 function generateProductOrders(items, total) {
@@ -14,7 +13,7 @@ function generateProductOrders(items, total) {
     const product = products[Math.floor(Math.random() * products.length)];
     items.push({
       quantity: Math.floor(Math.random() * 25 + 1),
-      product: product.ean,
+      product: product._id,
     });
 
     return generateProductOrders(items, total + product.price);
@@ -50,9 +49,11 @@ function generateAddress() {
 
 function generatePerson() {
   return {
-    id: generateID(),
+    _id: database.mongodbObjectId(),
     firstName: name.firstName(),
     lastName: name.lastName(),
+    created: Date.now(),
+    updated: null,
   };
 }
 
@@ -61,7 +62,6 @@ function generateCustomer() {
 
   return {
     ...generatePerson(),
-    firstOrder: coinflip(Date.now),
     addresses,
   };
 }
@@ -78,11 +78,13 @@ function generateEmployee() {
 
 function generateProduct() {
   return {
-    ean: generateID(),
+    _id: database.mongodbObjectId(),
     name: commerce.productName(),
     price: +finance.amount(0, 8000),
     description: commerce.productDescription(),
     image: image.technics(680, 480, true),
+    created: Date.now(),
+    updated: null,
   };
 }
 
@@ -92,7 +94,7 @@ function generateOrder() {
   const customer = customers[Math.floor(Math.random() * customers.length)];
 
   return {
-    id: generateID(),
+    _id: database.mongodbObjectId(),
     state: 'OPEN',
     address: generateAddress(),
     updated: null,
@@ -100,15 +102,17 @@ function generateOrder() {
     items,
     totalPrice,
     customer: {
-      id: customer.id,
+      _id: customer._id,
       firstName: customer.firstName,
       lastName: customer.lastName,
     },
     employee: {
-      id: employee.id,
+      _id: employee._id,
       firstName: employee.firstName,
       lastName: employee.lastName,
     },
+    created: Date.now(),
+    updated: null,
   };
 }
 
@@ -126,24 +130,40 @@ const orders = [];
  * Loops to fill database
  ***********************************************/
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 100; i++) {
   const employee = generateEmployee();
   employees.push(employee);
 }
 
-for (let i = 0; i < 1000; i++) {
+for (let i = 0; i < 3000; i++) {
   const customer = generateCustomer();
   customers.push(customer);
 }
 
-for (let i = 0; i < 5000; i++) {
+for (let i = 0; i < 10000; i++) {
   const product = generateProduct();
   products.push(product);
 }
 
-for (let i = 0; i < 10000; i++) {
+for (let i = 0; i < 40000; i++) {
   const order = generateOrder();
   orders.push(order);
 }
 
-console.log(orders);
+const callback = (err) => {
+  if (err) console.error(err);
+  console.log('Data written to file');
+};
+
+fs.writeFile(
+  'database-data/employees.json',
+  JSON.stringify(employees),
+  callback,
+);
+fs.writeFile(
+  'database-data/customers.json',
+  JSON.stringify(customers),
+  callback,
+);
+fs.writeFile('database-data/products.json', JSON.stringify(products), callback);
+fs.writeFile('database-data/orders.json', JSON.stringify(orders), callback);

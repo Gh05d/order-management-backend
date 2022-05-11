@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import orderHistories from 'src/data/orderHistories';
 import {
   OrderStatusHistory,
   OrderStatusHistoryDocument,
@@ -27,8 +26,5 @@ export class OrderStatusHistoryService {
     return this.orderHistoryModel.findById(id);
   }
 
-  async createProduct(orderHistory: CreateOrderStatusHistoryInput) {
-    this.orderHistories = [orderHistory, ...this.orderHistories];
-    return orderHistory;
-  }
+  async createProduct(orderHistory: CreateOrderStatusHistoryInput) {}
 }

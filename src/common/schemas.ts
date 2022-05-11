@@ -1,5 +1,6 @@
 import { Field, ObjectType, ID, InputType } from '@nestjs/graphql';
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import mongoose from 'mongoose';
 import { Product } from 'src/product/product.schema';
 
 @Schema()
@@ -15,6 +16,14 @@ export abstract class Person {
   @Prop({ required: true })
   @Field()
   lastName: string;
+
+  @Prop()
+  @Field()
+  updated?: Date;
+
+  @Prop({ required: true })
+  @Field()
+  created: Date;
 }
 
 @InputType()
@@ -32,7 +41,7 @@ export abstract class CreatePersonInput {
 @InputType()
 export abstract class FindPersonInput {
   @Field(() => ID)
-  id: string;
+  _id: string;
 }
 
 @ObjectType()
@@ -58,10 +67,26 @@ export class Address {
   misc?: string;
 }
 
+export type ProductOrderDocument = ProductOrder & mongoose.Document;
 @ObjectType()
 export class ProductOrder {
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Product.name })
+  @Field(() => Product)
+  product: Product;
+
   @Prop({ required: true })
-  @Field(() => ID)
+  @Field()
+  quantity: number;
+}
+
+export const ProductOrderSchema = SchemaFactory.createForClass(ProductOrder);
+
+ProductOrderSchema.index({ product: 1 });
+
+@InputType()
+export class CreateProductOrderInput {
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Product.name })
+  @Field(() => Product)
   product: Product;
 
   @Prop({ required: true })

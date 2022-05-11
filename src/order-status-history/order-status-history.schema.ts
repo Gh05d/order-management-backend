@@ -19,7 +19,7 @@ export class OrderStatusHistory {
 
   @Prop()
   @Field()
-  updated?: Date;
+  created?: Date;
 
   @Prop({ required: true })
   @Field()
@@ -48,7 +48,7 @@ export class CreateOrderStatusHistoryInput {
 @InputType()
 export class FindOrderStatusHistoryInput {
   @Field(() => ID)
-  id: string;
+  _id: string;
 
   @Field(() => [ID])
   status: Order[];

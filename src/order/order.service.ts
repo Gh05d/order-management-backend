@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import orders from 'src/data/orders';
 import { CreateOrderInput, Order, OrderDocument } from './order.schema';
 
 @Injectable()
@@ -23,8 +22,5 @@ export class OrderService {
     return this.orderModel.findById(id);
   }
 
-  async createProduct(order: CreateOrderInput) {
-    this.orders = [order, ...this.orders];
-    return order;
-  }
+  async createProduct(order: CreateOrderInput) {}
 }

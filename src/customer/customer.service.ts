@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import customers from 'src/data/customers';
 import {
   CreateCustomerInput,
   Customer,
@@ -27,8 +26,5 @@ export class CustomerService {
     return this.customerModel.findById(id);
   }
 
-  async createCustomer(customer: CreateCustomerInput) {
-    this.customers = [customer, ...this.customers];
-    return customer;
-  }
+  async createCustomer(customer: CreateCustomerInput) {}
 }
