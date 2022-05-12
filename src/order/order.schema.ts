@@ -32,7 +32,7 @@ class CustomerShort {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Customer',
   })
-  @Field(() => Customer)
+  @Field(() => ID)
   _id: string;
 
   @Prop({ required: true })
@@ -63,8 +63,8 @@ export class Order {
   @Field(() => Address)
   address: Address;
 
-  @Prop()
-  @Field()
+  @Prop({ required: false })
+  @Field({ nullable: true })
   updated?: Date;
 
   @Prop({ required: true })

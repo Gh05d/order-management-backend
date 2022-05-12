@@ -34,10 +34,10 @@ export class OrderResolver {
     return this.orderService.findById(id);
   }
 
-  @ResolveField()
-  async customer(@Parent() order: Order) {
-    return this.customerService.findById(order.customer._id);
-  }
+  // @ResolveField()
+  // async customer(@Parent() order: Order) {
+  //   return this.customerService.findById(order.customer._id);
+  // }
 
   @ResolveField()
   async items(@Parent() order: Order) {
@@ -46,7 +46,7 @@ export class OrderResolver {
     const products = await this.productService.fetchList(productIDs);
 
     const productsAndQuantities = products.map((product: Product) => ({
-      quantity: order.items?.find((item) => item.product == product._id)
+      quantity: order.items?.find((item) => item['product'] == product._id)
         .quantity,
       product,
     }));
