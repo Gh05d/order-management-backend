@@ -75,8 +75,6 @@ export class Address {
   misc?: string;
 }
 
-export type ProductOrderDocument = ProductOrder & mongoose.Document;
-
 @InputType()
 export class AddressInput {
   @Prop()
@@ -104,6 +102,8 @@ export class AddressInput {
   misc?: string;
 }
 
+// export type ProductOrderDocument = ProductOrder & mongoose.Document;
+
 @ObjectType()
 export class ProductOrder {
   @Prop({
@@ -119,9 +119,9 @@ export class ProductOrder {
   quantity: number;
 }
 
-export const ProductOrderSchema = SchemaFactory.createForClass(ProductOrder);
+// export const ProductOrderSchema = SchemaFactory.createForClass(ProductOrder);
 
-ProductOrderSchema.index({ product: 1 });
+// ProductOrderSchema.index({ product: 1 });
 
 @InputType()
 export class ProductOrderInput {

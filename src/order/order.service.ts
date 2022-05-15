@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model, Connection } from 'mongoose';
+import { InjectConnection } from '@nestjs/mongoose';
 import { Employee, EmployeeDocument } from 'src/employee/employee.schema';
+import {
+  OrderStatusHistory,
+  OrderStatusHistoryDocument,
+} from 'src/order-status-history/order-status-history.schema';
 import {
   CreateOrderInput,
   Order,
@@ -16,6 +21,9 @@ export class OrderService {
     private orderModel: Model<OrderDocument>,
     @InjectModel(Employee.name)
     private employeeModel: Model<EmployeeDocument>,
+    @InjectModel(OrderStatusHistory.name)
+    private orderStatusHistory: Model<OrderStatusHistoryDocument>,
+    @InjectConnection() private readonly connection: Connection,
   ) {}
 
   async fetchMany(offset = 0, limit = 50): Promise<Order[]> {
@@ -27,10 +35,7 @@ export class OrderService {
   }
 
   async createOrder(order: CreateOrderInput): Promise<Order> {
-    await this.orderModel.init();
-    const newOrder = new this.orderModel({ ...order, status: 'OPEN' });
-
-    return await newOrder.save();
+    return this.orderModel.create({ ...order, status: 'OPEN' });
   }
 
   async updateStatus(data: UpdateStatusInput): Promise<Order> {
@@ -54,11 +59,37 @@ export class OrderService {
       );
     }
 
-    return this.orderModel.findByIdAndUpdate(
-      data._id,
-      { status: data.status },
-      { returnDocument: 'after' },
-    );
+    const transactionSession = await this.connection.startSession();
+    transactionSession.startTransaction();
+    try {
+      await this.orderStatusHistory.create(
+        [
+          {
+            _id: new mongoose.Types.ObjectId(),
+            order: data._id,
+            status: data.status,
+            createdAt: Date.now(),
+            updated: Date.now(),
+          },
+        ],
+        { session: transactionSession },
+      );
+
+      const updatedOrder = await this.orderModel.findByIdAndUpdate(
+        data._id,
+        { status: data.status },
+        { returnDocument: 'after', session: transactionSession },
+      );
+
+      await transactionSession.commitTransaction();
+
+      return updatedOrder;
+    } catch (error) {
+      await transactionSession.abortTransaction();
+      throw Error(error);
+    } finally {
+      await transactionSession.endSession();
+    }
   }
 
   async assignEmployee(orderID: string, employeeID: string): Promise<Order> {

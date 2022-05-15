@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { Field, ObjectType, ID, InputType } from '@nestjs/graphql';
-import { Employee } from 'src/employee/employee.schema';
 import { Order } from 'src/order/order.schema';
 import mongoose from 'mongoose';
 
@@ -10,24 +9,28 @@ export type OrderStatusHistoryDocument = OrderStatusHistory & mongoose.Document;
 @Schema({ timestamps: true })
 @ObjectType()
 export class OrderStatusHistory {
-  @Field(() => ID)
-  _id?: string;
+  @Prop()
+  @Field(() => ID, { nullable: true })
+  _id: string;
 
-  @Prop({ required: true })
-  @Field()
-  state: 'OPEN' | 'IN_PROGRESS' | 'COMPLETE';
+  @Prop({
+    uppercase: true,
+    enum: ['OPEN', 'IN_PROGRESS', 'COMPLETE'],
+  })
+  @Field({ defaultValue: 'OPEN' })
+  status: 'OPEN' | 'IN_PROGRESS' | 'COMPLETE';
 
   @Prop()
   @Field()
-  createdAt?: Date;
+  updatedAt: string;
+
+  @Prop()
+  @Field()
+  createdAt: string;
 
   @Prop({ required: true })
-  @Field()
-  updatedAtBy: Employee;
-
-  @Prop({ required: true })
-  @Field()
-  order: Order;
+  @Field(() => Order)
+  order: string;
 }
 
 export const OrderStatusHistorySchema =
@@ -35,14 +38,16 @@ export const OrderStatusHistorySchema =
 
 @InputType()
 export class CreateOrderStatusHistoryInput {
+  @Prop({
+    uppercase: true,
+    enum: ['IN_PROGRESS', 'COMPLETE'],
+  })
   @Field()
-  state: 'IN_PROGRESS' | 'COMPLETE';
+  status: 'IN_PROGRESS' | 'COMPLETE';
 
-  @Field()
-  updatedAtBy: Employee;
-
-  @Field()
-  order: Order;
+  @Prop()
+  @Field(() => ID)
+  order: string;
 }
 
 @InputType()
@@ -50,6 +55,6 @@ export class FindOrderStatusHistoryInput {
   @Field(() => ID)
   _id: string;
 
-  @Field(() => [ID])
-  status: Order[];
+  @Field()
+  status: 'OPEN' | 'IN_PROGRESS' | 'COMPLETE';
 }

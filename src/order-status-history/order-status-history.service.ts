@@ -14,8 +14,12 @@ export class OrderStatusHistoryService {
     private orderStatusHistoryModel: Model<OrderStatusHistoryDocument>,
   ) {}
 
-  async fetchMany(): Promise<OrderStatusHistory[]> {
-    return this.orderStatusHistoryModel.find();
+  async fetchMany(offset = 0, limit = 50): Promise<OrderStatusHistory[]> {
+    return this.orderStatusHistoryModel.find().skip(offset).limit(limit).lean();
+  }
+
+  async fetchHistory(orderID): Promise<OrderStatusHistory[]> {
+    return this.orderStatusHistoryModel.find({ order: orderID });
   }
 
   async findById(id): Promise<OrderStatusHistory> {
@@ -25,6 +29,6 @@ export class OrderStatusHistoryService {
   async createStatus(
     status: CreateOrderStatusHistoryInput,
   ): Promise<OrderStatusHistory> {
-    return this.orderStatusHistoryModel.create(status);
+    return this.orderStatusHistoryModel.create({ ...status, status: 'OPEN' });
   }
 }

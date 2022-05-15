@@ -54,7 +54,7 @@ class CustomerShort {
 @ObjectType()
 export class Order {
   @Prop()
-  @Field(() => ID)
+  @Field(() => ID, { nullable: true })
   _id: string;
 
   @Prop({

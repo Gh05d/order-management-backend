@@ -93,8 +93,7 @@ function generateOrder() {
   const { items, totalPrice } = generateProductOrders([], 0);
   const employee = employees[Math.floor(Math.random() * employees.length)];
   const customer = customers[Math.floor(Math.random() * customers.length)];
-
-  return {
+  const order = {
     _id: database.mongodbObjectId(),
     status: 'OPEN',
     address: generateAddress(),
@@ -113,6 +112,17 @@ function generateOrder() {
       lastName: employee.lastName,
     })),
   };
+
+  return {
+    order,
+    orderHistory: {
+      _id: database.mongodbObjectId(),
+      status: 'OPEN',
+      order: order._id,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    },
+  };
 }
 
 /***********************************************
@@ -124,6 +134,7 @@ const products = [];
 const employees = [];
 const customers = [];
 const orders = [];
+const orderHistories = [];
 
 /***********************************************
  * Loops to fill database
@@ -145,8 +156,9 @@ for (let i = 0; i < 10000; i++) {
 }
 
 for (let i = 0; i < 40000; i++) {
-  const order = generateOrder();
+  const { order, orderHistory } = generateOrder();
   orders.push(order);
+  orderHistories.push(orderHistory);
 }
 
 const callback = (err) => {
@@ -166,3 +178,8 @@ fs.writeFile(
 );
 fs.writeFile('database-data/products.json', JSON.stringify(products), callback);
 fs.writeFile('database-data/orders.json', JSON.stringify(orders), callback);
+fs.writeFile(
+  'database-data/order-histories.json',
+  JSON.stringify(orderHistories),
+  callback,
+);

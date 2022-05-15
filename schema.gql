@@ -24,21 +24,6 @@ type ProductOrder {
   quantity: Int!
 }
 
-type Customer {
-  _id: ID!
-  firstName: String!
-  lastName: String!
-  updatedAt: String
-  createdAt: String!
-  addresses: [Address]!
-  firstOrder: DateTime!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 type Employee {
   _id: ID!
   firstName: String!
@@ -62,7 +47,7 @@ type CustomerShort {
 }
 
 type Order {
-  _id: ID!
+  _id: ID
   status: String!
   totalPrice: Float!
   address: Address!
@@ -74,12 +59,27 @@ type Order {
 }
 
 type OrderStatusHistory {
-  _id: ID!
-  state: String!
-  createdAt: DateTime!
-  updatedAtBy: Employee!
+  _id: ID
+  status: String!
+  updatedAt: String!
+  createdAt: String!
   order: Order!
 }
+
+type Customer {
+  _id: ID!
+  firstName: String!
+  lastName: String!
+  updatedAt: String
+  createdAt: String!
+  addresses: [Address]!
+  firstOrder: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type Query {
   products(limit: Int = 50): [Product!]!
@@ -90,13 +90,15 @@ type Query {
   customer(id: Int!): Customer!
   employees(limit: Int = null): [Employee!]!
   employee(id: Int!): Employee!
-  oshs: [OrderStatusHistory!]!
+  orderStatusHistories(offset: Int = 0, limit: Int = 50): [OrderStatusHistory!]!
+  orderStatusHistory(orderID: ID!): [OrderStatusHistory!]!
 }
 
 type Mutation {
   assignEmployee(orderID: ID!, employeeID: ID!): Order!
   createOrder(order: CreateOrderInput!): Order!
   updateStatus(orderID: ID!, status: String!): Order!
+  createDocument(status: CreateOrderStatusHistoryInput!): OrderStatusHistory!
 }
 
 input CreateOrderInput {
@@ -125,4 +127,9 @@ input PersonInput {
   _id: ID!
   firstName: String!
   lastName: String!
+}
+
+input CreateOrderStatusHistoryInput {
+  status: String!
+  order: ID!
 }

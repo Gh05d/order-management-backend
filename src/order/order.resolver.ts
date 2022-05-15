@@ -8,7 +8,6 @@ import {
   Int,
   Mutation,
 } from '@nestjs/graphql';
-import { CustomerService } from 'src/customer/customer.service';
 import { Product } from 'src/product/product.schema';
 import { ProductService } from 'src/product/product.service';
 import { CreateOrderInput, Order } from './order.schema';
@@ -18,7 +17,6 @@ import { OrderService } from './order.service';
 export class OrderResolver {
   constructor(
     private orderService: OrderService,
-    // private customerService: CustomerService,
     private productService: ProductService,
   ) {}
 
@@ -59,11 +57,6 @@ export class OrderResolver {
   ) {
     return this.orderService.updateStatus({ _id: orderID, status: status });
   }
-
-  // @ResolveField()
-  // async customer(@Parent() order: Order) {
-  //   return this.customerService.findById(order.customer._id);
-  // }
 
   @ResolveField()
   async items(@Parent() order: Order) {
