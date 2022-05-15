@@ -19,9 +19,7 @@ import { join } from 'path';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'schema.gql'),
-      buildSchemaOptions: {
-        dateScalarMode: 'timestamp',
-      },
+      cors: { origin: 'http://localhost:3000' },
     }),
     ProductModule,
     OrderModule,

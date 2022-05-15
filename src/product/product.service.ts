@@ -15,7 +15,7 @@ export class ProductService {
   }
 
   async fetchList(ids: string[]): Promise<Product[]> {
-    return this.productModel.find().where('_id').in(ids);
+    return this.productModel.find({ _id: { $in: ids } });
   }
 
   async findById(id): Promise<Product> {

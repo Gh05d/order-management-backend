@@ -4,27 +4,27 @@ import mongoose from 'mongoose';
 
 export type ProductDocument = Product & mongoose.Document;
 
-@Schema()
+@Schema({ timestamps: true })
 @ObjectType()
 export class Product {
-  @Prop({ required: true })
+  @Prop()
   @Field(() => ID)
   _id: string;
 
-  @Prop({ required: true })
+  @Prop()
   @Field()
   name: string;
 
-  @Prop({ required: true })
-  @Field((type) => Float)
+  @Prop()
+  @Field(() => Float)
   price: number;
 
-  @Prop({ required: true })
+  @Prop()
   @Field()
   image: string;
 
   @Prop()
-  @Field()
+  @Field({ nullable: true })
   description?: string;
 }
 
@@ -35,18 +35,12 @@ export class CreateProductInput {
   @Field()
   name: string;
 
-  @Field((type) => Float)
+  @Field()
   price: number;
 
   @Field()
   image: string;
 
-  @Field()
+  @Field({ nullable: true })
   description?: string;
 }
-
-// @InputType()
-// export class FindProductInput {
-//   @Field(() => ID)
-//   id: string;
-// }

@@ -7,15 +7,16 @@ type Product {
   name: String!
   price: Float!
   image: String!
-  description: String!
+  description: String
 }
 
 type Address {
-  street: String!
+  street: String
+  houseNumber: String
   zip: String!
   city: String!
   country: String!
-  misc: String!
+  misc: String
 }
 
 type ProductOrder {
@@ -27,16 +28,26 @@ type Customer {
   _id: ID!
   firstName: String!
   lastName: String!
-  updated: Timestamp!
-  created: Timestamp!
+  updatedAt: String
+  createdAt: String!
   addresses: [Address]!
-  firstOrder: Timestamp!
+  firstOrder: DateTime!
 }
 
 """
-`Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
-scalar Timestamp
+scalar DateTime
+
+type Employee {
+  _id: ID!
+  firstName: String!
+  lastName: String!
+  updatedAt: String
+  createdAt: String!
+  email: String!
+  employeeNumber: Int!
+}
 
 type EmployeeShort {
   _id: ID!
@@ -52,42 +63,66 @@ type CustomerShort {
 
 type Order {
   _id: ID!
-  state: String!
+  status: String!
   totalPrice: Float!
   address: Address!
-  updated: Timestamp
-  created: Timestamp!
+  updatedAt: String!
+  createdAt: String!
   items: [ProductOrder!]!
-  employee: EmployeeShort!
+  employee: EmployeeShort
   customer: CustomerShort!
-}
-
-type Employee {
-  _id: ID!
-  firstName: String!
-  lastName: String!
-  updated: Timestamp!
-  created: Timestamp!
-  email: String!
-  employeeNumber: Float!
 }
 
 type OrderStatusHistory {
   _id: ID!
   state: String!
-  created: Timestamp!
-  updatedBy: Employee!
+  createdAt: DateTime!
+  updatedAtBy: Employee!
   order: Order!
 }
 
 type Query {
   products(limit: Int = 50): [Product!]!
   product(id: Int!): Product!
-  orders(limit: Int = 50): [Order!]!
+  orders(offset: Int = 0, limit: Int = 50): [Order!]!
   order(id: ID!): Order!
   customers: [Customer!]!
   customer(id: Int!): Customer!
-  employees(limit: Int!): [Employee!]!
+  employees(limit: Int = null): [Employee!]!
   employee(id: Int!): Employee!
   oshs: [OrderStatusHistory!]!
+}
+
+type Mutation {
+  assignEmployee(orderID: ID!, employeeID: ID!): Order!
+  createOrder(order: CreateOrderInput!): Order!
+  updateStatus(orderID: ID!, status: String!): Order!
+}
+
+input CreateOrderInput {
+  totalPrice: Float!
+  address: AddressInput!
+  items: [ProductOrderInput!]!
+  employee: PersonInput
+  customer: PersonInput!
+}
+
+input AddressInput {
+  street: String
+  houseNumber: String
+  zip: String!
+  city: String!
+  country: String!
+  misc: String
+}
+
+input ProductOrderInput {
+  product: ID!
+  quantity: Float!
+}
+
+input PersonInput {
+  _id: ID!
+  firstName: String!
+  lastName: String!
 }

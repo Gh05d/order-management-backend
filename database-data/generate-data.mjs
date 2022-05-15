@@ -40,9 +40,10 @@ function generateAddresses(addresses) {
 function generateAddress() {
   return {
     street: address.streetName(),
+    houseNumber: address.buildingNumber(),
     zip: address.zipCode('######'),
     city: address.cityName(),
-    country: address.countryCode('alpha-2'),
+    country: address.country(),
     misc: coinflip(address.streetSuffix),
   };
 }
@@ -52,8 +53,8 @@ function generatePerson() {
     _id: database.mongodbObjectId(),
     firstName: name.firstName(),
     lastName: name.lastName(),
-    created: Date.now(),
-    updated: null,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
   };
 }
 
@@ -83,8 +84,8 @@ function generateProduct() {
     price: +finance.amount(0, 8000),
     description: commerce.productDescription(),
     image: image.technics(680, 480, true),
-    created: Date.now(),
-    updated: null,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
   };
 }
 
@@ -95,10 +96,10 @@ function generateOrder() {
 
   return {
     _id: database.mongodbObjectId(),
-    state: 'OPEN',
+    status: 'OPEN',
     address: generateAddress(),
-    updated: null,
-    created: Date.now(),
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
     items,
     totalPrice,
     customer: {
@@ -106,13 +107,11 @@ function generateOrder() {
       firstName: customer.firstName,
       lastName: customer.lastName,
     },
-    employee: {
+    employee: coinflip(() => ({
       _id: employee._id,
       firstName: employee.firstName,
       lastName: employee.lastName,
-    },
-    created: Date.now(),
-    updated: null,
+    })),
   };
 }
 

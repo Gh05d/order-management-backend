@@ -6,7 +6,7 @@ import { Product } from 'src/product/product.schema';
 @Schema()
 @ObjectType()
 export abstract class Person {
-  @Prop({ required: true })
+  @Prop()
   @Field(() => ID)
   _id: string;
 
@@ -19,22 +19,25 @@ export abstract class Person {
   lastName: string;
 
   @Prop()
-  @Field()
-  updated?: Date;
+  @Field({ nullable: true })
+  updatedAt?: string;
 
   @Prop({ required: true })
   @Field()
-  created: Date;
+  createdAt: string;
 }
 
 @InputType()
-export abstract class CreatePersonInput {
+export class PersonInput {
+  @Prop()
   @Field(() => ID)
   _id: string;
 
+  @Prop()
   @Field()
   firstName: string;
 
+  @Prop()
   @Field()
   lastName: string;
 }
@@ -48,27 +51,58 @@ export abstract class FindPersonInput {
 @ObjectType()
 export class Address {
   @Prop()
-  @Field()
+  @Field({ nullable: true })
   street?: string;
 
-  @Prop({ required: true })
+  @Prop()
+  @Field({ nullable: true })
+  houseNumber?: string;
+
+  @Prop()
   @Field()
   zip: string;
 
-  @Prop({ required: true })
+  @Prop()
   @Field()
   city: string;
 
-  @Prop({ required: true })
+  @Prop()
   @Field()
   country: string;
 
   @Prop()
-  @Field()
+  @Field({ nullable: true })
   misc?: string;
 }
 
 export type ProductOrderDocument = ProductOrder & mongoose.Document;
+
+@InputType()
+export class AddressInput {
+  @Prop()
+  @Field({ nullable: true })
+  street?: string;
+
+  @Prop()
+  @Field({ nullable: true })
+  houseNumber?: string;
+
+  @Prop()
+  @Field()
+  zip: string;
+
+  @Prop()
+  @Field()
+  city: string;
+
+  @Prop()
+  @Field()
+  country: string;
+
+  @Prop()
+  @Field({ nullable: true })
+  misc?: string;
+}
 
 @ObjectType()
 export class ProductOrder {
@@ -90,9 +124,9 @@ export const ProductOrderSchema = SchemaFactory.createForClass(ProductOrder);
 ProductOrderSchema.index({ product: 1 });
 
 @InputType()
-export class CreateProductOrderInput {
-  @Field(() => Product)
-  product: Product;
+export class ProductOrderInput {
+  @Field(() => ID)
+  product: string;
 
   @Field()
   quantity: number;

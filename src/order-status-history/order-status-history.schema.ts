@@ -7,10 +7,9 @@ import mongoose from 'mongoose';
 
 export type OrderStatusHistoryDocument = OrderStatusHistory & mongoose.Document;
 
-@Schema()
+@Schema({ timestamps: true })
 @ObjectType()
 export class OrderStatusHistory {
-  @Prop({ required: true })
   @Field(() => ID)
   _id?: string;
 
@@ -20,11 +19,11 @@ export class OrderStatusHistory {
 
   @Prop()
   @Field()
-  created?: Date;
+  createdAt?: Date;
 
   @Prop({ required: true })
   @Field()
-  updatedBy: Employee;
+  updatedAtBy: Employee;
 
   @Prop({ required: true })
   @Field()
@@ -40,7 +39,7 @@ export class CreateOrderStatusHistoryInput {
   state: 'IN_PROGRESS' | 'COMPLETE';
 
   @Field()
-  updatedBy: Employee;
+  updatedAtBy: Employee;
 
   @Field()
   order: Order;

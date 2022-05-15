@@ -1,10 +1,10 @@
 import { Field, ObjectType, InputType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { Address, CreatePersonInput, Person } from '../common/schemas';
+import { Address, Person, PersonInput } from '../common/schemas';
 
 export type CustomerDocument = Customer & mongoose.Document;
-@Schema()
+@Schema({ timestamps: true })
 @ObjectType()
 export class Customer extends Person {
   @Prop()
@@ -19,7 +19,7 @@ export class Customer extends Person {
 export const CustomerSchema = SchemaFactory.createForClass(Customer);
 
 @InputType()
-export class CreateCustomerInput extends CreatePersonInput {
+export class CreateCustomerInput extends PersonInput {
   @Field(() => [Address])
   addresses: Address[] | [];
 

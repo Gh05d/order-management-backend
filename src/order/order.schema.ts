@@ -1,8 +1,14 @@
 import { Field, ObjectType, ID, InputType, Float } from '@nestjs/graphql';
-import { Address, ProductOrder } from 'src/common/schemas';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { Customer } from 'src/customer/customer.schema';
+
+import {
+  Address,
+  AddressInput,
+  PersonInput,
+  ProductOrder,
+  ProductOrderInput,
+} from 'src/common/schemas';
 
 export type OrderDocument = Order & mongoose.Document;
 
@@ -44,16 +50,19 @@ class CustomerShort {
   lastName: string;
 }
 
-@Schema()
+@Schema({ timestamps: true })
 @ObjectType()
 export class Order {
-  @Prop({ required: true })
+  @Prop()
   @Field(() => ID)
   _id: string;
 
-  @Prop({ required: true })
-  @Field()
-  state?: 'OPEN' | 'IN_PROGRESS' | 'COMPLETE';
+  @Prop({
+    uppercase: true,
+    enum: ['OPEN', 'IN_PROGRESS', 'COMPLETE'],
+  })
+  @Field({ defaultValue: 'OPEN' })
+  status?: 'OPEN' | 'IN_PROGRESS' | 'COMPLETE';
 
   @Prop({ required: true })
   @Field(() => Float)
@@ -63,21 +72,19 @@ export class Order {
   @Field(() => Address)
   address: Address;
 
-  @Prop({ required: false })
-  @Field({ nullable: true })
-  updated?: Date;
-
-  @Prop({ required: true })
   @Field()
-  created: Date;
+  updatedAt: string;
+
+  @Field()
+  createdAt: string;
 
   @Prop()
   @Field(() => [ProductOrder])
-  items: ProductOrder[] | [];
+  items: ProductOrder[];
 
-  @Prop({ required: true })
-  @Field(() => EmployeeShort)
-  employee: EmployeeShort;
+  @Prop()
+  @Field(() => EmployeeShort, { nullable: true })
+  employee?: EmployeeShort;
 
   @Prop({ required: true })
   @Field(() => CustomerShort)
@@ -88,24 +95,36 @@ export const OrderSchema = SchemaFactory.createForClass(Order);
 
 @InputType()
 export class CreateOrderInput {
-  @Prop({ required: true })
-  @Field(() => Float)
+  @Prop()
+  @Field()
   totalPrice: number;
 
-  @Field(() => Address)
-  address: Address;
+  @Prop()
+  @Field()
+  address: AddressInput;
 
   @Prop()
-  @Field(() => [ProductOrder])
-  items: ProductOrder[] | [];
+  @Field(() => [ProductOrderInput])
+  items: ProductOrderInput[];
 
-  @Prop({ required: true })
-  @Field(() => EmployeeShort)
-  employee: EmployeeShort;
+  @Prop()
+  @Field({ nullable: true })
+  employee?: PersonInput;
 
+  @Prop()
+  @Field()
+  customer: PersonInput;
+}
+
+@InputType()
+export class UpdateStatusInput {
   @Prop({ required: true })
-  @Field(() => CustomerShort)
-  customer: CustomerShort;
+  @Field(() => ID)
+  _id: string;
+
+  @Prop({ enum: ['IN_PROGRESS', 'COMPLETE'] })
+  @Field()
+  status?: 'IN_PROGRESS' | 'COMPLETE';
 }
 
 @InputType()
